@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    body {
+      width: 280px;
+      padding: 16px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #1a1a2e;
+      color: #eee;
+      margin: 0;
+    }
+    h2 {
+      margin: 0 0 12px;
+      font-size: 16px;
+      color: #e94560;
+    }
+    .theme-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+    .theme-btn {
+      padding: 10px 8px;
+      border: 2px solid #333;
+      border-radius: 8px;
+      background: #16213e;
+      color: #eee;
+      cursor: pointer;
+      font-size: 12px;
+      text-align: center;
+      transition: all 0.2s;
+    }
+    .theme-btn:hover {
+      border-color: #e94560;
+      transform: scale(1.03);
+    }
+    .theme-btn.active {
+      border-color: #e94560;
+      background: #0f3460;
+    }
+    .section {
+      margin-bottom: 12px;
+    }
+    .section label {
+      display: block;
+      font-size: 11px;
+      color: #888;
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    input[type="range"] {
+      width: 100%;
+      accent-color: #e94560;
+    }
+    .stats {
+      font-size: 11px;
+      color: #666;
+      border-top: 1px solid #333;
+      padding-top: 8px;
+    }
+    .toggle-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+    .toggle {
+      position: relative;
+      width: 40px;
+      height: 22px;
+    }
+    .toggle input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    .slider {
+      position: absolute;
+      inset: 0;
+      background: #333;
+      border-radius: 22px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    .slider:before {
+      content: "";
+      position: absolute;
+      height: 16px;
+      width: 16px;
+      left: 3px;
+      bottom: 3px;
+      background: #eee;
+      border-radius: 50%;
+      transition: 0.3s;
+    }
+    .toggle input:checked + .slider {
+      background: #e94560;
+    }
+    .toggle input:checked + .slider:before {
+      transform: translateX(18px);
+    }
+  </style>
+</head>
+<body>
+  <h2>Web Themer</h2>
+
+  <div class="toggle-row">
+    <span>Enable theming</span>
+    <label class="toggle">
+      <input type="checkbox" id="enabled" checked>
+      <span class="slider"></span>
+    </label>
+  </div>
+
+  <label style="font-size:11px;color:#888;text-transform:uppercase;letter-spacing:1px;">Theme</label>
+  <div class="theme-grid">
+    <button class="theme-btn" data-theme="dark">Dark</button>
+    <button class="theme-btn" data-theme="warm">Warm</button>
+    <button class="theme-btn" data-theme="cool">Cool</button>
+    <button class="theme-btn" data-theme="forest">Forest</button>
+    <button class="theme-btn" data-theme="sunset">Sunset</button>
+    <button class="theme-btn" data-theme="ocean">Ocean</button>
+  </div>
+
+  <div class="section">
+    <label>Font Size</label>
+    <input type="range" id="fontSize" min="80" max="150" value="100">
+  </div>
+
+  <div class="section">
+    <label>Contrast</label>
+    <input type="range" id="contrast" min="80" max="150" value="100">
+  </div>
+
+  <div class="stats" id="stats">Sites themed: 0</div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

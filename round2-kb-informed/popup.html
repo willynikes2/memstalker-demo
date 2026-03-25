@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <style>
+    * { box-sizing: border-box; margin: 0; }
+    body {
+      width: 320px;
+      padding: 16px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #0f0f23;
+      color: #e0e0e0;
+    }
+    .header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 14px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #1a1a2e;
+    }
+    .header h1 {
+      font-size: 15px;
+      color: #e94560;
+      font-weight: 700;
+    }
+    .header .site-badge {
+      margin-left: auto;
+      font-size: 11px;
+      background: #1a1a2e;
+      padding: 3px 8px;
+      border-radius: 10px;
+      color: #aaa;
+    }
+    .section {
+      margin-bottom: 12px;
+    }
+    .section-label {
+      font-size: 11px;
+      color: #999;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      margin-bottom: 6px;
+    }
+
+    /* Toggle row */
+    .toggle-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    .toggle-row span { font-size: 13px; }
+    .toggle { position: relative; width: 38px; height: 20px; }
+    .toggle input { opacity: 0; width: 0; height: 0; }
+    .slider {
+      position: absolute; inset: 0; background: #333;
+      border-radius: 20px; cursor: pointer; transition: 0.2s;
+    }
+    .slider:before {
+      content: ""; position: absolute; height: 14px; width: 14px;
+      left: 3px; bottom: 3px; background: #eee;
+      border-radius: 50%; transition: 0.2s;
+    }
+    .toggle input:checked + .slider { background: #e94560; }
+    .toggle input:checked + .slider:before { transform: translateX(18px); }
+
+    /* Theme grid */
+    .theme-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 6px;
+      margin-bottom: 12px;
+    }
+    .theme-btn {
+      padding: 8px 4px;
+      border: 2px solid #222;
+      border-radius: 6px;
+      background: #1a1a2e;
+      color: #ccc;
+      cursor: pointer;
+      font-size: 12px;
+      text-align: center;
+      transition: all 0.15s;
+    }
+    .theme-btn:hover { border-color: #e94560; }
+    .theme-btn.active { border-color: #e94560; background: #0f3460; color: #fff; }
+
+    /* Layout options */
+    .layout-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+    }
+    .layout-btn {
+      padding: 8px 6px;
+      border: 1px solid #222;
+      border-radius: 4px;
+      background: transparent;
+      color: #aaa;
+      cursor: pointer;
+      font-size: 12px;
+      text-align: center;
+    }
+    .layout-btn:hover { border-color: #e94560; color: #fff; }
+    .layout-btn.active { border-color: #e94560; color: #e94560; }
+
+    /* Density */
+    .density-row {
+      display: flex;
+      gap: 6px;
+    }
+    .density-btn {
+      flex: 1;
+      padding: 6px;
+      border: 1px solid #222;
+      border-radius: 4px;
+      background: transparent;
+      color: #aaa;
+      cursor: pointer;
+      font-size: 12px;
+      text-align: center;
+    }
+    .density-btn:hover { border-color: #e94560; }
+    .density-btn.active { border-color: #e94560; color: #e94560; }
+
+    /* Sliders */
+    input[type="range"] {
+      width: 100%;
+      accent-color: #e94560;
+      margin-top: 4px;
+    }
+    .slider-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .slider-row input[type="range"] { flex: 1; }
+    .slider-value {
+      font-size: 12px;
+      color: #aaa;
+      min-width: 36px;
+      text-align: right;
+    }
+
+    /* Trust level */
+    .trust-row {
+      display: flex;
+      gap: 4px;
+    }
+    .trust-btn {
+      flex: 1;
+      padding: 8px 4px;
+      border: 1px solid #222;
+      border-radius: 4px;
+      background: transparent;
+      color: #aaa;
+      cursor: pointer;
+      font-size: 12px;
+      text-align: center;
+    }
+    .trust-btn:hover { border-color: #4a9eff; }
+    .trust-btn.active { border-color: #4a9eff; color: #4a9eff; }
+
+    .trust-description {
+      font-size: 11px;
+      color: #999;
+      margin-top: 6px;
+      min-height: 16px;
+      transition: color 0.2s;
+    }
+
+    /* Page info */
+    .page-info {
+      font-size: 11px;
+      color: #999;
+      background: #1a1a2e;
+      padding: 6px 8px;
+      border-radius: 4px;
+      margin-bottom: 10px;
+    }
+
+    /* Site badge error state */
+    .site-badge.error {
+      background: #4a3000;
+      color: #ffb347;
+    }
+
+    /* Disabled state — dims controls when extension is off */
+    .controls-disabled {
+      opacity: 0.4;
+      pointer-events: none;
+    }
+
+    /* Footer */
+    .footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 10px;
+      padding-top: 8px;
+      border-top: 1px solid #1a1a2e;
+      font-size: 11px;
+      color: #999;
+    }
+    .footer a {
+      color: #e94560;
+      text-decoration: none;
+      cursor: pointer;
+    }
+    .footer a:hover { text-decoration: underline; }
+    .footer .danger-link {
+      color: #aaa;
+      border: 1px solid #ff4444;
+      padding: 2px 8px;
+      border-radius: 4px;
+    }
+    .footer .danger-link:hover {
+      background: #ff4444;
+      color: #fff;
+    }
+
+    /* Confirm delete inline UI */
+    .confirm-delete {
+      display: none;
+      background: #2a0a0a;
+      border: 1px solid #ff4444;
+      border-radius: 4px;
+      padding: 8px;
+      margin-top: 8px;
+      font-size: 11px;
+      color: #e0a0a0;
+    }
+    .confirm-delete.visible { display: block; }
+    .confirm-delete button {
+      margin-top: 6px;
+      padding: 4px 12px;
+      font-size: 11px;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>Memstalker</h1>
+    <span class="site-badge" id="siteBadge">loading...</span>
+  </div>
+
+  <!-- Enable toggle — always visible -->
+  <div class="toggle-row">
+    <span>Memstalker Active</span>
+    <label class="toggle">
+      <input type="checkbox" id="enabled" checked aria-label="Enable or disable Memstalker on this site">
+      <span class="slider"></span>
+    </label>
+  </div>
+
+  <div class="page-info" id="pageInfo">Detecting page...</div>
+
+  <!-- Trust controls FIRST (Gemini: most consequential = most prominent) -->
+  <div id="controlsWrapper">
+    <div class="section">
+      <div class="section-label">Trust Level (this site)</div>
+      <div class="trust-row" role="radiogroup" aria-label="Trust level">
+        <button class="trust-btn" data-trust="view_only" role="radio" aria-pressed="false">View</button>
+        <button class="trust-btn" data-trust="suggest" role="radio" aria-pressed="false">Suggest</button>
+        <button class="trust-btn" data-trust="assist" role="radio" aria-pressed="false">Assist</button>
+        <button class="trust-btn" data-trust="action" role="radio" aria-pressed="false">Action</button>
+      </div>
+      <div class="trust-description" id="trustDesc">Theme only. No data collected.</div>
+    </div>
+
+    <div class="toggle-row">
+      <span>Remember preferences</span>
+      <label class="toggle">
+        <input type="checkbox" id="memoryToggle" aria-label="Enable preference memory">
+        <span class="slider"></span>
+      </label>
+    </div>
+
+    <!-- Appearance section -->
+    <div class="section">
+      <div class="section-label">Color Scheme</div>
+      <div class="theme-grid" role="radiogroup" aria-label="Color scheme">
+        <button class="theme-btn" data-scheme="dark" role="radio" aria-pressed="false">Dark</button>
+        <button class="theme-btn" data-scheme="warm" role="radio" aria-pressed="false">Warm</button>
+        <button class="theme-btn" data-scheme="cool" role="radio" aria-pressed="false">Cool</button>
+        <button class="theme-btn" data-scheme="forest" role="radio" aria-pressed="false">Forest</button>
+        <button class="theme-btn" data-scheme="sunset" role="radio" aria-pressed="false">Sunset</button>
+        <button class="theme-btn" data-scheme="ocean" role="radio" aria-pressed="false">Ocean</button>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-label">Layout</div>
+      <div class="layout-grid" role="radiogroup" aria-label="Layout style">
+        <button class="layout-btn" data-layout="card" role="radio" aria-pressed="false">Card</button>
+        <button class="layout-btn" data-layout="list" role="radio" aria-pressed="false">List</button>
+        <button class="layout-btn" data-layout="magazine" role="radio" aria-pressed="false">Magazine</button>
+        <button class="layout-btn" data-layout="minimal" role="radio" aria-pressed="false">Minimal</button>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-label">Density</div>
+      <div class="density-row" role="radiogroup" aria-label="Visual density">
+        <button class="density-btn" data-density="compact" role="radio" aria-pressed="false">Compact</button>
+        <button class="density-btn" data-density="comfortable" role="radio" aria-pressed="false">Comfort</button>
+        <button class="density-btn" data-density="spacious" role="radio" aria-pressed="false">Spacious</button>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-label">Font Size</div>
+      <div class="slider-row">
+        <input type="range" id="fontSize" min="80" max="150" value="100" aria-label="Font size percentage">
+        <span class="slider-value" id="fontSizeValue">100%</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <span id="entityCount">-</span>
+    <a id="exportBtn">Export Profile (JSON)</a>
+    <a class="danger-link" id="deleteBtn">Delete All Data</a>
+  </div>
+
+  <div class="confirm-delete" id="confirmDelete">
+    This will permanently delete all Memstalker data across all sites — preferences, taste graph, and trust settings.
+    <br>
+    <button id="confirmDeleteBtn">Yes, Delete Everything</button>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

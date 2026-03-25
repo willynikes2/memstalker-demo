@@ -1,0 +1,160 @@
+/* Memstalker Base Theme — CSS custom properties, NOT CSS filters.
+ * The transformer sets --ms-* variables; this file uses them.
+ * This approach preserves images/video and enables per-element control. */
+
+html[data-memstalker="active"] {
+  background-color: var(--ms-bg, #0f0f23) !important;
+  color: var(--ms-fg, #e0e0e0) !important;
+  line-height: var(--ms-line-height, 1.5);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+html[data-memstalker="active"] body {
+  background-color: var(--ms-bg, #0f0f23) !important;
+  color: var(--ms-fg, #e0e0e0) !important;
+}
+
+/* Surface elements */
+html[data-memstalker="active"] div,
+html[data-memstalker="active"] section,
+html[data-memstalker="active"] aside,
+html[data-memstalker="active"] nav,
+html[data-memstalker="active"] header,
+html[data-memstalker="active"] footer,
+html[data-memstalker="active"] main {
+  background-color: inherit;
+  color: inherit;
+}
+
+/* Cards and containers */
+html[data-memstalker="active"] article,
+html[data-memstalker="active"] .card,
+html[data-memstalker="active"] [class*="card"],
+html[data-memstalker="active"] [class*="post"],
+html[data-memstalker="active"] [class*="item"] {
+  background-color: var(--ms-surface, #1a1a2e) !important;
+  color: var(--ms-fg) !important;
+  border-color: color-mix(in srgb, var(--ms-accent) 20%, transparent) !important;
+  border-radius: 8px;
+  padding: var(--ms-spacing, 8px);
+  margin-bottom: var(--ms-spacing, 8px);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+html[data-memstalker="active"] article:hover,
+html[data-memstalker="active"] [class*="post"]:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+
+/* Links */
+html[data-memstalker="active"] a {
+  color: var(--ms-accent, #e94560) !important;
+  text-decoration: none;
+}
+html[data-memstalker="active"] a:hover {
+  text-decoration: underline;
+}
+
+/* Headings */
+html[data-memstalker="active"] h1,
+html[data-memstalker="active"] h2,
+html[data-memstalker="active"] h3 {
+  color: var(--ms-fg, #e0e0e0) !important;
+}
+
+/* Muted/secondary text */
+html[data-memstalker="active"] small,
+html[data-memstalker="active"] .muted,
+html[data-memstalker="active"] [class*="meta"],
+html[data-memstalker="active"] [class*="subtitle"],
+html[data-memstalker="active"] [class*="secondary"] {
+  color: var(--ms-muted, #666) !important;
+}
+
+/* Inputs */
+html[data-memstalker="active"] input,
+html[data-memstalker="active"] textarea,
+html[data-memstalker="active"] select {
+  background-color: var(--ms-surface) !important;
+  color: var(--ms-fg) !important;
+  border-color: var(--ms-muted) !important;
+  border-radius: 4px;
+}
+
+/* Buttons */
+html[data-memstalker="active"] button,
+html[data-memstalker="active"] [role="button"] {
+  background-color: var(--ms-accent) !important;
+  color: var(--ms-bg) !important;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+/* Preserve images and media — no filter inversion */
+html[data-memstalker="active"] img,
+html[data-memstalker="active"] video,
+html[data-memstalker="active"] canvas,
+html[data-memstalker="active"] svg {
+  filter: none !important;
+}
+
+/* Layout modes */
+.ms-layout-card {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: var(--ms-spacing, 8px);
+}
+
+.ms-layout-list {
+  display: flex !important;
+  flex-direction: column;
+  gap: var(--ms-spacing, 4px);
+}
+
+.ms-layout-magazine {
+  display: grid !important;
+  grid-template-columns: 2fr 1fr;
+  gap: var(--ms-spacing, 8px);
+}
+
+.ms-layout-minimal {
+  max-width: 680px;
+  margin: 0 auto !important;
+}
+
+/* Density: compact */
+html[data-ms-density="compact"] {
+  font-size: 13px;
+}
+html[data-ms-density="compact"] article,
+html[data-ms-density="compact"] [class*="post"] {
+  padding: 4px !important;
+  margin-bottom: 2px !important;
+}
+
+/* Density: spacious */
+html[data-ms-density="spacious"] {
+  font-size: 17px;
+}
+html[data-ms-density="spacious"] article,
+html[data-ms-density="spacious"] [class*="post"] {
+  padding: 20px !important;
+  margin-bottom: 16px !important;
+}
+
+/* Font scale */
+html[data-memstalker="active"] {
+  font-size: calc(1em * var(--ms-font-scale, 1));
+}
+
+/* Contrast adjustment */
+html[data-memstalker="active"] {
+  filter: contrast(var(--ms-contrast, 1));
+}
+
+/* Smooth transitions for theme switching */
+html[data-memstalker="active"] * {
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}

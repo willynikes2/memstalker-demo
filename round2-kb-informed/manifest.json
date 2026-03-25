@@ -1,0 +1,42 @@
+{
+  "manifest_version": 3,
+  "name": "Memstalker Web Themer",
+  "version": "1.0.1",
+  "description": "Themes and normalizes the web. Learns your taste. Your agent runs it.",
+  "permissions": ["activeTab", "storage"],
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'none';"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "content_scripts": [
+    {
+      "matches": ["*://*.reddit.com/*"],
+      "js": ["models/page-model.js", "core/taste.js", "core/trust.js", "core/transformer.js", "adapters/reddit.js", "core/controller.js"],
+      "css": ["themes/base.css"],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": ["*://news.ycombinator.com/*"],
+      "js": ["models/page-model.js", "core/taste.js", "core/trust.js", "core/transformer.js", "adapters/hackernews.js", "core/controller.js"],
+      "css": ["themes/base.css"],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": ["<all_urls>"],
+      "exclude_matches": ["*://*.reddit.com/*", "*://news.ycombinator.com/*"],
+      "js": ["models/page-model.js", "core/taste.js", "core/trust.js", "core/transformer.js", "adapters/generic.js", "core/controller.js"],
+      "css": ["themes/base.css"],
+      "run_at": "document_idle"
+    }
+  ],
+  "background": {
+    "service_worker": "background.js"
+  }
+}
