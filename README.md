@@ -1,12 +1,14 @@
-# This Is Your Agent On Memstalker
+# Just Say No To Stateless Agents
 
 A side-by-side comparison of what AI agents build **without** vs **with** a knowledge base.
 
-Both rounds received the same prompt:
+Same prompt. Same model. No internet. Radically different output.
+
 > "Build a browser extension that themes websites and learns user preferences."
 
-## Round 1: Stateless (No KB)
-**`/round1-stateless/`** — Built with zero context. No internet, no knowledge base.
+## `/stateless/` — Round 1: No KB, No Memory
+
+Built with zero context. No internet, no knowledge base, no memory.
 
 - 6 files, flat structure
 - CSS `filter: invert()` theming (breaks images)
@@ -15,26 +17,24 @@ Both rounds received the same prompt:
 - No privacy controls
 - No layout options
 
-## Round 2: KB-Informed + Multi-Agent Review
-**`/round2-kb-informed/`** — Built after searching the Memstalker knowledge base for architecture docs.
+## `/memstalker/` — Round 2: KB-Informed + Multi-Agent Review
 
-- 12 files across organized directories
+Built after searching the Memstalker knowledge base. Codex and Gemini reviewed with KB access.
+
+- 12+ files across organized directories
 - CSS custom properties theming (preserves media)
 - Site-specific adapters (Reddit, HN, generic fallback)
 - 3-tier taste graph (hot/warm/long-term memory)
 - 4-level trust system (view/suggest/assist/action)
 - Card/list/magazine/minimal layout modes
-- Compact/comfortable/spacious density
 - GDPR-ready export/delete
-- Accessibility: aria-pressed, radiogroups, contrast-safe
-
-### Multi-Agent Reviews Applied
-- **Codex (GPT-5.4)**: Security audit — found 4 HIGH, 3 MEDIUM issues. All fixed.
-- **Gemini (2.5 Pro)**: UX audit — found 7 CRITICAL, 8 IMPORTANT issues. All fixed.
+- Accessibility: ARIA roles, labels, contrast-safe
+- [`SECURITY-REVIEW.md`](memstalker/SECURITY-REVIEW.md) — written by Codex (GPT-5.4) with KB access
+- [`UX-REVIEW.md`](memstalker/UX-REVIEW.md) — written by Gemini (2.5 Pro) with KB access
 
 ## Architecture Comparison
 
-| | Round 1 | Round 2 |
+| | Stateless | Memstalker |
 |---|---|---|
 | Structure | Flat | Layered (adapters, core, models, themes) |
 | Theming | CSS filters | CSS custom properties |
@@ -44,16 +44,18 @@ Both rounds received the same prompt:
 | Layout control | None | 4 layout modes |
 | Accessibility | None | ARIA roles, labels, contrast |
 | Security | No validation | Sender validation, input whitelisting, CSP |
+| Agent reviews | None | Codex security + Gemini UX (both with KB) |
 
-## The Point
+## 3 Agents, 1 Brain
 
-The knowledge base gave the agent:
-1. **Architecture** — site adapter layer, normalized page model, taste graph concept
-2. **Product context** — why trust matters, what the moat is, build order priorities
-3. **Multi-agent review** — real Codex and Gemini CLIs caught issues Claude missed
+- **Claude (Opus 4.6)** — Built the extension using KB architecture docs
+- **Codex (GPT-5.4)** — Security reviewed with KB context, wrote SECURITY-REVIEW.md
+- **Gemini (2.5 Pro)** — UX reviewed with KB context, wrote UX-REVIEW.md
 
-Same prompt. Same model. Radically different output.
+All three agents accessed the same Memstalker knowledge base. No internet was used.
 
 ---
+
+**memstalker.com** — give your agents a memory.
 
 Built with [Claude Code](https://claude.ai/claude-code) + [Memstalker KB](https://memstalker.com)
