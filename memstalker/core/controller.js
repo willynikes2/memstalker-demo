@@ -67,7 +67,11 @@
       if (!isPopup) { sendResponse({ error: 'unauthorized' }); return; }
       trust.exportProfile().then(data => sendResponse({ data }));
       return true; // async response
-    } else if (msg.type === 'deleteData') {
+    } else if (msg.type === 'deleteSiteData') {
+      if (!isPopup) { sendResponse({ error: 'unauthorized' }); return; }
+      trust.deleteSiteData(hostname).then(() => sendResponse({ ok: true }));
+      return true;
+    } else if (msg.type === 'deleteAllData') {
       if (!isPopup) { sendResponse({ error: 'unauthorized' }); return; }
       trust.deleteAllData().then(() => sendResponse({ ok: true }));
       return true;

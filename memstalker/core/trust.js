@@ -67,14 +67,14 @@ class TrustManager {
     return true; // enabled globally by default
   }
 
-  // Check if an action is allowed
+  // Check if an action is allowed — derives capture consent from per-site trust level
   canDo(action, hostname) {
     if (!this.isEnabledFor(hostname)) return false;
 
     const level = this.getLevelFor(hostname);
     switch (action) {
       case 'theme':      return true;
-      case 'capture':    return this.dataCollection && level !== TrustLevel.VIEW_ONLY;
+      case 'capture':    return level !== TrustLevel.VIEW_ONLY; // derived from site trust, not global flag
       case 'suggest':    return level === TrustLevel.SUGGEST || level === TrustLevel.ASSIST || level === TrustLevel.ACTION;
       case 'reorder':    return level === TrustLevel.ASSIST || level === TrustLevel.ACTION;
       case 'hide':       return level === TrustLevel.ASSIST || level === TrustLevel.ACTION;
@@ -87,11 +87,7 @@ class TrustManager {
     // Validate trust level
     if (!VALID_TRUST_LEVELS.has(level)) return;
     this.siteOverrides[hostname] = level;
-    // Enable data collection if user explicitly chooses suggest+
-    if (level !== TrustLevel.VIEW_ONLY) {
-      this.dataCollection = true;
-      this.memoryEnabled = true;
-    }
+    // No longer mutates global state — consent is per-site via trust level
     await this.save();
   }
 
@@ -113,7 +109,26 @@ class TrustManager {
     });
   }
 
-  // Delete all stored data
+  // Delete data for a specific site only
+  async deleteSiteData(hostname) {
+    delete this.siteOverrides[hostname];
+    delete this.siteEnabled[hostname];
+    // Remove site-specific taste rules
+    return new Promise((resolve) => {
+      chrome.storage.local.get(['taste_long'], (data) => {
+        const tasteLong = data.taste_long || {};
+        if (tasteLong.siteRules) {
+          delete tasteLong.siteRules[hostname];
+        }
+        chrome.storage.local.set({ taste_long: tasteLong }, async () => {
+          await this.save();
+          resolve();
+        });
+      });
+    });
+  }
+
+  // Delete ALL stored data globally
   async deleteAllData() {
     return new Promise((resolve) => {
       chrome.storage.local.clear(resolve);

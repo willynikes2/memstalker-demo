@@ -47,6 +47,17 @@ const PAGE_TYPE_LABELS = {
   unknown: 'Unsupported page'
 };
 
+const ENTITY_NOUNS = {
+  feed: 'posts',
+  product_list: 'products',
+  product_detail: 'items',
+  article: 'articles',
+  video: 'videos',
+  forum_thread: 'comments',
+  search_results: 'results',
+  unknown: 'items'
+};
+
 let currentTab = null;
 
 // Get current state from content script
@@ -65,8 +76,9 @@ chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
 
     siteBadge.textContent = response.hostname.slice(0, 60);
     const label = PAGE_TYPE_LABELS[response.pageType] || response.pageType;
-    pageInfo.textContent = `${label} \u2022 ${response.entityCount} items detected`;
-    entityCount.textContent = `${response.entityCount} items`;
+    const noun = ENTITY_NOUNS[response.pageType] || 'items';
+    pageInfo.textContent = `${label} \u2022 ${response.entityCount} ${noun} found`;
+    entityCount.textContent = `${response.entityCount} ${noun}`;
 
     // Set active buttons from current preferences
     setActive(schemeButtons, 'scheme', response.prefs.colorScheme);
@@ -163,13 +175,21 @@ exportBtn.addEventListener('click', () => {
   });
 });
 
-// Delete — inline confirmation (Gemini fix: no confirm() dialog)
+// Delete — inline confirmation with site-scoped and global options
 deleteBtn.addEventListener('click', () => {
   confirmDelete.classList.toggle('visible');
 });
 
+// Site-scoped delete
+document.getElementById('deleteSiteBtn')?.addEventListener('click', () => {
+  chrome.tabs.sendMessage(currentTab.id, { type: 'deleteSiteData' }, () => {
+    window.close();
+  });
+});
+
+// Global delete
 confirmDeleteBtn.addEventListener('click', () => {
-  chrome.tabs.sendMessage(currentTab.id, { type: 'deleteData' }, () => {
+  chrome.tabs.sendMessage(currentTab.id, { type: 'deleteAllData' }, () => {
     window.close();
   });
 });
